@@ -16,14 +16,14 @@
 <!-- Search & Filter -->
 <form method="GET" action="/donors">
   <div class="search-bar">
-    <div class="search-input-wrap">
+    <div class="search-wrap">
       <i class="fas fa-search"></i>
       <input type="text" name="search" placeholder="Search donors by name…" value="{{ search }}">
     </div>
-    <select name="blood_group" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;">
+    <select name="blood_group" class="search-select">
       <option value="">All Blood Groups</option>
-      {% for bg in ['A+','A-','B+','B-','AB+','AB-','O+','O-'] %}
-      <option value="{{ bg }}" {% if bg == bg %}{% endif %}>{{ bg }}</option>
+      {% for bg_opt in ['A+','A-','B+','B-','AB+','AB-','O+','O-'] %}
+      <option value="{{ bg_opt }}" {% if bg_opt == bg %}selected{% endif %}>{{ bg_opt }}</option>
       {% endfor %}
     </select>
     <button type="submit" class="btn btn-ghost"><i class="fas fa-filter"></i> Filter</button>
@@ -63,10 +63,12 @@
           <td style="color:var(--muted)">{{ d.gender or '—' }}</td>
           <td style="color:var(--muted)">{{ d.last_donated or '—' }}</td>
           <td>
-            <a href="/delete_donor/{{ d.id }}" class="btn btn-danger btn-sm"
-               onclick="return confirm('Delete this donor?')">
-              <i class="fas fa-trash"></i>
-            </a>
+            <form action="/delete_donor/{{ d.id }}" method="POST" style="display:inline"
+                  onsubmit="return confirm('Delete this donor?')">
+              <button type="submit" class="btn btn-danger btn-sm">
+                <i class="fas fa-trash"></i>
+              </button>
+            </form>
           </td>
         </tr>
         {% endfor %}

@@ -3,11 +3,13 @@ from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from functools import wraps
 import os
+from dotenv import load_dotenv
+load_dotenv()  # loads .env file when running locally
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///bloodcentre.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'bloodcore2024secret')
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'bloodcore2024secret-dev')
 db = SQLAlchemy(app)
 
 class Donor(db.Model):
@@ -38,8 +40,8 @@ class BloodRequest(db.Model):
     created_at   = db.Column(db.DateTime, default=datetime.utcnow)
 
 STAFF_ACCOUNTS = {
-    'admin':  'bloodcore123',
-    'doctor': 'gonda2024',
+    os.environ.get('ADMIN_USER',  'admin'):  os.environ.get('ADMIN_PASS',  'bloodcore123'),
+    os.environ.get('DOCTOR_USER', 'doctor'): os.environ.get('DOCTOR_PASS', 'gonda2024'),
 }
 
 def login_required(f):
@@ -108,7 +110,7 @@ def add_donor():
     db.session.commit()
     return redirect('/donors')
 
-@app.route('/delete_donor/<int:id>')
+@app.route('/delete_donor/<int:id>', methods=['POST'])
 @login_required
 def delete_donor(id):
     Donor.query.filter_by(id=id).delete()
@@ -129,6 +131,7 @@ def update_inventory():
     item  = BloodInventory.query.filter_by(blood_group=bg).first()
     if item:
         item.units = units
+        item.updated_at = datetime.utcnow()
     else:
         db.session.add(BloodInventory(blood_group=bg, units=units))
     db.session.commit()

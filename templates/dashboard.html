@@ -16,25 +16,25 @@
     <div class="stat-label">Total Donors</div>
     <div class="stat-value">{{ total_donors }}</div>
     <div class="stat-sub">Registered donors</div>
-    <i class="fas fa-users stat-icon"></i>
+    <div class="stat-icon-wrap"><i class="fas fa-users"></i></div>
   </div>
   <div class="stat-card">
     <div class="stat-label">Blood Requests</div>
     <div class="stat-value">{{ total_requests }}</div>
     <div class="stat-sub">All time requests</div>
-    <i class="fas fa-hand-holding-medical stat-icon"></i>
+    <div class="stat-icon-wrap"><i class="fas fa-hand-holding-medical"></i></div>
   </div>
   <div class="stat-card">
     <div class="stat-label">Pending Requests</div>
     <div class="stat-value" style="color:var(--warn)">{{ pending }}</div>
     <div class="stat-sub">Needs attention</div>
-    <i class="fas fa-clock stat-icon"></i>
+    <div class="stat-icon-wrap"><i class="fas fa-clock"></i></div>
   </div>
   <div class="stat-card">
     <div class="stat-label">Blood Groups</div>
     <div class="stat-value" style="color:var(--red)">{{ inventory|length }}</div>
     <div class="stat-sub">Types tracked</div>
-    <i class="fas fa-tint stat-icon"></i>
+    <div class="stat-icon-wrap"><i class="fas fa-tint"></i></div>
   </div>
 </div>
 

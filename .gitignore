@@ -1,0 +1,20 @@
+# Environment secrets - NEVER commit this
+.env
+ 
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+ 
+# Database
+*.db
+*.sqlite3
+ 
+# IDE
+.vscode/
+.idea/

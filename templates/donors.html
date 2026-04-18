@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Donors{% endblock %}
+{% block topbar_title %}Donor Management{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Donors</h1>
+    <p>Manage and search all registered blood donors.</p>
+  </div>
+  <button class="btn btn-primary" onclick="openModal('addDonorModal')">
+    <i class="fas fa-plus"></i> Add Donor
+  </button>
+</div>
+
+<!-- Search & Filter -->
+<form method="GET" action="/donors">
+  <div class="search-bar">
+    <div class="search-input-wrap">
+      <i class="fas fa-search"></i>
+      <input type="text" name="search" placeholder="Search donors by name…" value="{{ search }}">
+    </div>
+    <select name="blood_group" style="background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:10px 14px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;">
+      <option value="">All Blood Groups</option>
+      {% for bg in ['A+','A-','B+','B-','AB+','AB-','O+','O-'] %}
+      <option value="{{ bg }}" {% if bg == bg %}{% endif %}>{{ bg }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-ghost"><i class="fas fa-filter"></i> Filter</button>
+    {% if search or bg %}
+    <a href="/donors" class="btn btn-ghost"><i class="fas fa-times"></i> Clear</a>
+    {% endif %}
+  </div>
+</form>
+
+<!-- Table -->
+<div class="card">
+  <div class="table-wrap">
+    {% if donors %}
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>Blood Group</th>
+          <th>Phone</th>
+          <th>City</th>
+          <th>Age</th>
+          <th>Gender</th>
+          <th>Last Donated</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in donors %}
+        <tr>
+          <td style="color:var(--muted)">{{ d.id }}</td>
+          <td style="font-weight:500">{{ d.name }}</td>
+          <td><span class="bg-badge">{{ d.blood_group }}</span></td>
+          <td style="color:var(--muted)">{{ d.phone or '—' }}</td>
+          <td style="color:var(--muted)">{{ d.city or '—' }}</td>
+          <td style="color:var(--muted)">{{ d.age or '—' }}</td>
+          <td style="color:var(--muted)">{{ d.gender or '—' }}</td>
+          <td style="color:var(--muted)">{{ d.last_donated or '—' }}</td>
+          <td>
+            <a href="/delete_donor/{{ d.id }}" class="btn btn-danger btn-sm"
+               onclick="return confirm('Delete this donor?')">
+              <i class="fas fa-trash"></i>
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-user-slash"></i>
+      <p>No donors found. Try a different search or add a new donor.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Add Donor Modal -->
+<div class="modal-overlay" id="addDonorModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🩸 Add New Donor</div>
+      <button class="modal-close" onclick="closeModal('addDonorModal')">✕</button>
+    </div>
+    <form action="/add_donor" method="POST">
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="form-group">
+          <label>Full Name *</label>
+          <input type="text" name="name" placeholder="e.g. Ramesh Kumar" required>
+        </div>
+        <div class="form-group">
+          <label>Blood Group *</label>
+          <select name="blood_group" required>
+            <option value="">Select...</option>
+            {% for bg in ['A+','A-','B+','B-','AB+','AB-','O+','O-'] %}
+            <option value="{{ bg }}">{{ bg }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input type="text" name="phone" placeholder="e.g. 9876543210">
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" name="city" placeholder="e.g. Gonda">
+        </div>
+        <div class="form-group">
+          <label>Age</label>
+          <input type="number" name="age" placeholder="e.g. 28" min="18" max="65">
+        </div>
+        <div class="form-group">
+          <label>Gender</label>
+          <select name="gender">
+            <option value="">Select...</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Last Donated Date</label>
+          <input type="date" name="last_donated">
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('addDonorModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Add Donor</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

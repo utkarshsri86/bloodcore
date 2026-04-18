@@ -1,0 +1,115 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block topbar_title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Good day 👋</h1>
+    <p>Here's what's happening at your blood centre today.</p>
+  </div>
+</div>
+
+<!-- Stats -->
+<div class="stats-grid">
+  <div class="stat-card">
+    <div class="stat-label">Total Donors</div>
+    <div class="stat-value">{{ total_donors }}</div>
+    <div class="stat-sub">Registered donors</div>
+    <i class="fas fa-users stat-icon"></i>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Blood Requests</div>
+    <div class="stat-value">{{ total_requests }}</div>
+    <div class="stat-sub">All time requests</div>
+    <i class="fas fa-hand-holding-medical stat-icon"></i>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Pending Requests</div>
+    <div class="stat-value" style="color:var(--warn)">{{ pending }}</div>
+    <div class="stat-sub">Needs attention</div>
+    <i class="fas fa-clock stat-icon"></i>
+  </div>
+  <div class="stat-card">
+    <div class="stat-label">Blood Groups</div>
+    <div class="stat-value" style="color:var(--red)">{{ inventory|length }}</div>
+    <div class="stat-sub">Types tracked</div>
+    <i class="fas fa-tint stat-icon"></i>
+  </div>
+</div>
+
+<!-- Inventory Overview + Recent Donors -->
+<div class="two-col" style="margin-bottom:20px;">
+  <div class="card">
+    <div class="card-title"><i class="fas fa-tint"></i> Blood Inventory</div>
+    <div class="inv-grid">
+      {% for item in inventory %}
+      <div class="inv-card">
+        <div class="inv-blood-group">{{ item.blood_group }}</div>
+        <div class="inv-units">{{ item.units }}</div>
+        <div class="inv-label">Units</div>
+        <div class="inv-bar-wrap">
+          <div class="inv-bar" style="width: {{ [item.units * 5, 100]|min }}%"></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div style="margin-top:16px;">
+      <a href="/inventory" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-right"></i> Manage Inventory</a>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title"><i class="fas fa-users"></i> Recent Donors</div>
+    {% if recent_donors %}
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Group</th><th>City</th></tr></thead>
+        <tbody>
+          {% for d in recent_donors %}
+          <tr>
+            <td>{{ d.name }}</td>
+            <td><span class="bg-badge">{{ d.blood_group }}</span></td>
+            <td style="color:var(--muted)">{{ d.city or '—' }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state"><i class="fas fa-user-plus"></i><p>No donors yet. Add your first donor!</p></div>
+    {% endif %}
+    <div style="margin-top:16px;">
+      <a href="/donors" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-right"></i> All Donors</a>
+    </div>
+  </div>
+</div>
+
+<!-- Recent Requests -->
+<div class="card">
+  <div class="card-title"><i class="fas fa-hand-holding-medical"></i> Recent Blood Requests</div>
+  {% if recent_requests %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Patient</th><th>Blood Group</th><th>Units</th><th>Hospital</th><th>Status</th></tr></thead>
+      <tbody>
+        {% for r in recent_requests %}
+        <tr>
+          <td>{{ r.patient_name }}</td>
+          <td><span class="bg-badge">{{ r.blood_group }}</span></td>
+          <td>{{ r.units_needed }}</td>
+          <td style="color:var(--muted)">{{ r.hospital or '—' }}</td>
+          <td><span class="status status-{{ r.status|lower }}">{{ r.status }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state"><i class="fas fa-clipboard-list"></i><p>No requests yet.</p></div>
+  {% endif %}
+  <div style="margin-top:16px;">
+    <a href="/requests" class="btn btn-ghost btn-sm"><i class="fas fa-arrow-right"></i> All Requests</a>
+  </div>
+</div>
+{% endblock %}

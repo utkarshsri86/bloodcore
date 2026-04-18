@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Blood Requests{% endblock %}
+{% block topbar_title %}Blood Requests{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Blood Requests</h1>
+    <p>Manage incoming blood requests from patients and hospitals.</p>
+  </div>
+  <button class="btn btn-primary" onclick="openModal('addRequestModal')">
+    <i class="fas fa-plus"></i> New Request
+  </button>
+</div>
+
+<!-- Requests Table -->
+<div class="card">
+  <div class="table-wrap">
+    {% if requests %}
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Patient Name</th>
+          <th>Blood Group</th>
+          <th>Units Needed</th>
+          <th>Hospital</th>
+          <th>Contact</th>
+          <th>Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in requests %}
+        <tr>
+          <td style="color:var(--muted)">{{ r.id }}</td>
+          <td style="font-weight:500">{{ r.patient_name }}</td>
+          <td><span class="bg-badge">{{ r.blood_group }}</span></td>
+          <td>{{ r.units_needed }}</td>
+          <td style="color:var(--muted)">{{ r.hospital or '—' }}</td>
+          <td style="color:var(--muted)">{{ r.contact or '—' }}</td>
+          <td style="color:var(--muted)">{{ r.created_at.strftime('%d %b %Y') }}</td>
+          <td><span class="status status-{{ r.status|lower }}">{{ r.status }}</span></td>
+          <td style="display:flex;gap:6px;flex-wrap:wrap;">
+            {% if r.status == 'Pending' %}
+            <a href="/update_request_status/{{ r.id }}/Fulfilled" class="btn btn-success btn-sm">
+              <i class="fas fa-check"></i> Fulfill
+            </a>
+            <a href="/update_request_status/{{ r.id }}/Cancelled" class="btn btn-danger btn-sm">
+              <i class="fas fa-times"></i>
+            </a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <i class="fas fa-clipboard-list"></i>
+      <p>No blood requests yet.</p>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Add Request Modal -->
+<div class="modal-overlay" id="addRequestModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🩸 New Blood Request</div>
+      <button class="modal-close" onclick="closeModal('addRequestModal')">✕</button>
+    </div>
+    <form action="/add_request" method="POST">
+      <div class="form-grid" style="margin-bottom:16px;">
+        <div class="form-group">
+          <label>Patient Name *</label>
+          <input type="text" name="patient_name" placeholder="e.g. Suresh Gupta" required>
+        </div>
+        <div class="form-group">
+          <label>Blood Group *</label>
+          <select name="blood_group" required>
+            <option value="">Select...</option>
+            {% for bg in ['A+','A-','B+','B-','AB+','AB-','O+','O-'] %}
+            <option value="{{ bg }}">{{ bg }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Units Needed</label>
+          <input type="number" name="units_needed" placeholder="e.g. 2" min="1" value="1">
+        </div>
+        <div class="form-group">
+          <label>Hospital</label>
+          <input type="text" name="hospital" placeholder="e.g. District Hospital Gonda">
+        </div>
+        <div class="form-group">
+          <label>Contact Number</label>
+          <input type="text" name="contact" placeholder="e.g. 9876543210">
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('addRequestModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit Request</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

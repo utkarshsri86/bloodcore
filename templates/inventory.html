@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Inventory{% endblock %}
+{% block topbar_title %}Blood Inventory{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1>Blood Inventory</h1>
+    <p>Track available blood units by group.</p>
+  </div>
+  <button class="btn btn-primary" onclick="openModal('updateModal')">
+    <i class="fas fa-edit"></i> Update Stock
+  </button>
+</div>
+
+<!-- Inventory Cards -->
+<div class="inv-grid" style="margin-bottom:28px;">
+  {% for item in inventory %}
+  <div class="inv-card" style="padding:24px;">
+    <div class="inv-blood-group">{{ item.blood_group }}</div>
+    <div class="inv-units" style="font-size:40px;">{{ item.units }}</div>
+    <div class="inv-label">Units Available</div>
+    <div class="inv-bar-wrap" style="margin-top:14px;">
+      <div class="inv-bar" style="width:{{ [item.units*5,100]|min }}%"></div>
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--muted);">
+      {% if item.units == 0 %}
+        <span style="color:#ef4444;">⚠ Out of stock</span>
+      {% elif item.units < 5 %}
+        <span style="color:var(--warn);">⚡ Low stock</span>
+      {% else %}
+        <span style="color:var(--success);">✓ In stock</span>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Update Modal -->
+<div class="modal-overlay" id="updateModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title">🩸 Update Blood Stock</div>
+      <button class="modal-close" onclick="closeModal('updateModal')">✕</button>
+    </div>
+    <form action="/update_inventory" method="POST">
+      <div class="form-grid" style="margin-bottom:20px;">
+        <div class="form-group">
+          <label>Blood Group *</label>
+          <select name="blood_group" required>
+            {% for bg in ['A+','A-','B+','B-','AB+','AB-','O+','O-'] %}
+            <option value="{{ bg }}">{{ bg }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Units Available *</label>
+          <input type="number" name="units" placeholder="e.g. 10" min="0" required>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;justify-content:flex-end;">
+        <button type="button" class="btn btn-ghost" onclick="closeModal('updateModal')">Cancel</button>
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Update Stock</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

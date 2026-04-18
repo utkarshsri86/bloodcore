@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: bloodcore
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app
+    plan: free

@@ -165,11 +165,12 @@ def update_request_status(id, status):
     db.session.commit()
     return redirect('/requests')
 
+with app.app_context():
+    db.create_all()
+    if BloodInventory.query.count() == 0:
+        for bg in ['A+','A-','B+','B-','AB+','AB-','O+','O-']:
+            db.session.add(BloodInventory(blood_group=bg, units=0))
+        db.session.commit()
+
 if __name__ == '__main__':
-    with app.app_context():
-        db.create_all()
-        if BloodInventory.query.count() == 0:
-            for bg in ['A+','A-','B+','B-','AB+','AB-','O+','O-']:
-                db.session.add(BloodInventory(blood_group=bg, units=0))
-            db.session.commit()
     app.run(debug=True)

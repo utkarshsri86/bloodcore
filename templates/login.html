@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Charitable Blood Centre — Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#080810;color:#ede9f6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:16px;position:relative;overflow:hidden;}
+body::before{content:'';position:absolute;top:-150px;left:50%;transform:translateX(-50%);width:700px;height:500px;background:radial-gradient(ellipse,rgba(220,38,38,0.1) 0%,transparent 65%);pointer-events:none;}
+body::after{content:'';position:absolute;bottom:-100px;right:-100px;width:400px;height:400px;background:radial-gradient(circle,rgba(220,38,38,0.06) 0%,transparent 70%);pointer-events:none;}
+
+.login-wrap{width:100%;max-width:420px;position:relative;z-index:1;}
+
+.brand{text-align:center;margin-bottom:28px;}
+.brand-emblem{width:60px;height:60px;background:linear-gradient(135deg,#dc2626,#991b1b);border-radius:16px;display:inline-grid;place-items:center;font-size:26px;box-shadow:0 6px 24px rgba(220,38,38,0.35);margin-bottom:14px;}
+.brand-name{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;line-height:1.2;}
+.brand-name span{color:#dc2626;}
+.brand-sub{font-size:12px;color:#5f5a72;margin-top:5px;letter-spacing:0.5px;}
+
+.card{background:#0f0f18;border:1px solid rgba(255,255,255,0.07);border-radius:20px;padding:32px 28px;}
+
+.error-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.22);color:#ef4444;border-radius:10px;padding:11px 14px;font-size:13px;margin-bottom:18px;display:flex;align-items:center;gap:9px;}
+
+.form-group{margin-bottom:15px;}
+.form-group label{display:block;font-size:10px;color:#5f5a72;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:7px;}
+.input-wrap{position:relative;}
+.input-wrap i{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#5f5a72;font-size:13px;}
+.form-group input{width:100%;background:#161622;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:12px 14px 12px 38px;color:#ede9f6;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;-webkit-appearance:none;}
+.form-group input:focus{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,0.1);}
+
+.btn-login{width:100%;padding:13px;background:#dc2626;color:white;border:none;border-radius:11px;font-family:'Plus Jakarta Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:all 0.2s;margin-top:6px;box-shadow:0 4px 18px rgba(220,38,38,0.28);display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-login:hover{background:#991b1b;transform:translateY(-1px);box-shadow:0 6px 24px rgba(220,38,38,0.35);}
+.btn-login:active{transform:translateY(0);}
+
+.divider{height:1px;background:rgba(255,255,255,0.06);margin:22px 0;}
+
+.creds-box{background:#161622;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:14px;}
+.creds-title{font-size:10px;color:#5f5a72;text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-bottom:10px;}
+.cred-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12.5px;}
+.cred-row:last-child{border-bottom:none;}
+.cred-label{color:#a09ab8;}
+.cred-val{font-family:monospace;background:rgba(220,38,38,0.08);color:#f87171;padding:2px 8px;border-radius:5px;font-size:12px;}
+
+.footer{text-align:center;margin-top:20px;font-size:11px;color:#5f5a72;}
+</style>
+</head>
+<body>
+<div class="login-wrap">
+  <div class="brand">
+    <div class="brand-emblem">🩸</div>
+    <div class="brand-name">Charitable <span>Blood Centre</span></div>
+    <div class="brand-sub">Gonda & Balrampur, Uttar Pradesh</div>
+  </div>
+
+  <div class="card">
+    {% if error %}
+    <div class="error-box"><i class="fas fa-exclamation-circle"></i> {{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/login">
+      <div class="form-group">
+        <label>Username</label>
+        <div class="input-wrap">
+          <i class="fas fa-user"></i>
+          <input type="text" name="username" placeholder="Enter your username" required autofocus autocomplete="username"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <div class="input-wrap">
+          <i class="fas fa-lock"></i>
+          <input type="password" name="password" placeholder="Enter your password" required autocomplete="current-password"/>
+        </div>
+      </div>
+      <button type="submit" class="btn-login">
+        <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+      </button>
+    </form>
+
+  </div>
+
+  <div class="footer">Charitable Blood Centre © 2024 — Secure Staff Portal</div>
+</div>
+</body>
+</html>

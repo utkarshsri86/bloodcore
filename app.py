@@ -7,7 +7,10 @@ from dotenv import load_dotenv
 load_dotenv()  # loads .env file when running locally
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///bloodcentre.db')
+_db_url = os.environ.get('DATABASE_URL', 'sqlite:///bloodcentre.db')
+if _db_url.startswith('postgres://'):
+    _db_url = _db_url.replace('postgres://', 'postgresql://', 1)
+app.config['SQLALCHEMY_DATABASE_URI'] = _db_url
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'bloodcore2024secret-dev')
 db = SQLAlchemy(app)
